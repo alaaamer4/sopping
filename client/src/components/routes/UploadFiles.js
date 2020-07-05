@@ -7,23 +7,28 @@ const UploadFiles = () => {
     price: "",
     area: "",
   });
+  const [images, setImages] = useState([]);
   const { title, description, price, area } = input;
 
   const handelSubmit = (e) => {
     e.preventDefault();
     console.log(input);
+    console.log(images);
   };
   const handelChange = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
+  const updateImages = (images) => {
+    setImages(images);
+  };
   return (
-    <section>
+    <section style={{ marginTop: "8rem" }}>
       <h2 className="large text-primary">
         {" "}
-        <i className="fas fa-upload"></i> Upload Files
+        <i className="fas fa-upload"></i> Add product
       </h2>
-      <Upload />
+      <Upload uploadImages={updateImages} />
       <form className="form" onSubmit={handelSubmit}>
         <div className="form-group">
           <input

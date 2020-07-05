@@ -6,7 +6,7 @@ const multer = require("multer");
 // set the storage engine
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "server/uploads/");
   },
   filename: function (req, file, cb) {
     cb(
@@ -27,21 +27,13 @@ const upload = multer({
 router.post("/", (req, res) => {
   upload(req, res, (err) => {
     if (err) {
-      res.status(500).json({ success: false, err: err });
+      res.status(500).json({ success: false, err: `server error ${err}` });
     } else {
-      if (req.files === undefined) {
-        console.log(req);
-        res.status(400).json({
-          success: false,
-          err: "no image was selected",
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          images: `/uploads/${req.files.filename}`,
-          filename: req.files.filename,
-        });
-      }
+      res.status(200).json({
+        success: true,
+        image: res.req.file.path,
+        filename: res.req.file.filename,
+      });
     }
   });
 });

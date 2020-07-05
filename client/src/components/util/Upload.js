@@ -3,7 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { setAlert } from "../../store/actions/alert";
 
-const Upload = ({ setAlert }) => {
+const Upload = ({ setAlert, uploadImages }) => {
   const [images, setImages] = useState([]);
 
   const handleClick = (e) => {
@@ -21,6 +21,8 @@ const Upload = ({ setAlert }) => {
       .then((res) => {
         if (res.data.success) {
           setImages([...images, res.data.image]);
+          uploadImages([...images, res.data.image]);
+          setAlert("image uploaded successfully", "success");
           console.log(images);
         }
       })
@@ -36,11 +38,12 @@ const Upload = ({ setAlert }) => {
     <div className="wrapper">
       <div>
         <button className="btn btn-light drag" onClick={handleClick}>
-          <i className="fas fa-upload fa-4x"></i>
+          <i className="fas fa-plus fa-4x text-primary"></i>
         </button>
         <input
           type="file"
           onChange={handelChange}
+          multiple={false}
           id="fileUpload"
           name="file"
         />
@@ -57,7 +60,7 @@ const Upload = ({ setAlert }) => {
           <div key={index}>
             <img
               style={{ minWidth: "300px", width: "300px", height: "240px" }}
-              src={`image uri goes here`}
+              src={`http://localhost5000/${image}`}
             />
           </div>
         ))}

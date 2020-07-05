@@ -25,13 +25,13 @@ function App({ auth }) {
     <div>
       <Router>
         <Header />
+        <Route exact path="/" component={Home} />
         <div className="container">
           <Alert />
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/upload" component={UploadFiles} />
-            <Route exact path="/" component={Home} />
           </Switch>
         </div>
       </Router>
