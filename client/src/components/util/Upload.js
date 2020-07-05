@@ -20,9 +20,8 @@ const Upload = ({ setAlert }) => {
       .post("/api/products/imageUpload", formData, config)
       .then((res) => {
         if (res.data.success) {
-          setImages([...images, res.data.images]);
+          setImages([...images, res.data.image]);
           console.log(images);
-        } else {
         }
       })
       .catch((err) => {
@@ -58,8 +57,7 @@ const Upload = ({ setAlert }) => {
           <div key={index}>
             <img
               style={{ minWidth: "300px", width: "300px", height: "240px" }}
-              src={`http://localhost:5000/${image}`}
-              alt={`productImg-${index}`}
+              src={`image uri goes here`}
             />
           </div>
         ))}
