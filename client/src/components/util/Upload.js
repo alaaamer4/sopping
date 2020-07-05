@@ -11,7 +11,7 @@ const Upload = ({ setAlert }) => {
   };
   const handelChange = (e) => {
     const formData = new FormData();
-    formData.append("images", e.target.files[0]);
+    formData.append("file", e.target.files[0]);
     console.log(e.target.files[0]);
     const config = {
       headers: { "content-type": "multipart/form-data" },
@@ -43,11 +43,26 @@ const Upload = ({ setAlert }) => {
           type="file"
           onChange={handelChange}
           id="fileUpload"
-          name="images"
+          name="file"
         />
       </div>
-      <div className="drag">
-        <img src="" />
+      <div
+        style={{
+          display: "flex",
+          width: "350px",
+          height: "240px",
+          overflowX: "scroll",
+        }}
+      >
+        {images.map((image, index) => (
+          <div key={index}>
+            <img
+              style={{ minWidth: "300px", width: "300px", height: "240px" }}
+              src={`http://localhost:5000/${image}`}
+              alt={`productImg-${index}`}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

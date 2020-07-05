@@ -7,7 +7,8 @@ const products = require("./server/routes/products");
 
 connectDB();
 // static folder
-app.use(express.static("./server/uploads"));
+app.use("/uploads", express.static("uploads"));
+app.use(express.static("client/uploads"));
 // body parser
 app.use(express.json());
 

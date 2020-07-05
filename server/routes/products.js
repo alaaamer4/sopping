@@ -5,7 +5,9 @@ const path = require("path");
 const multer = require("multer");
 // set the storage engine
 const storage = multer.diskStorage({
-  destination: "../uploads/",
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
   filename: function (req, file, cb) {
     cb(
       null,
@@ -17,13 +19,12 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: { fileSize: 1000000000000000000000000 },
-}).array("images", 4);
+}).single("file");
 
 //@ Route api/products/imageUpload
 //@ Method   POST
 //@ Upload image
 router.post("/", (req, res) => {
-  console.log(res.req);
   upload(req, res, (err) => {
     if (err) {
       res.status(500).json({ success: false, err: err });
@@ -37,8 +38,8 @@ router.post("/", (req, res) => {
       } else {
         res.status(200).json({
           success: true,
-          images: `/uploads/${req.file.filename}`,
-          filename: req.file.filename,
+          images: `/uploads/${req.files.filename}`,
+          filename: req.files.filename,
         });
       }
     }
