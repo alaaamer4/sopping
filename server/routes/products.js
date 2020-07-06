@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { Products } = require("../models/Products");
+const auth = require("../middleware/auth");
 // multer setup for file upload
 const path = require("path");
 const multer = require("multer");
@@ -24,7 +26,7 @@ const upload = multer({
 //@ Route api/products/imageUpload
 //@ Method   POST
 //@ Upload image
-router.post("/", (req, res) => {
+router.post("/imageUpload", auth, (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       res.status(500).json({ success: false, err: `server error ${err}` });
@@ -38,4 +40,28 @@ router.post("/", (req, res) => {
   });
 });
 
+//@ Route api/products/uploadProduct
+//@ Method   POST
+//@ Add product to database
+router.post("/uploadProduct", auth, async (req, res) => {
+  try {
+    const { title, description, price, images } = req.body;
+    let productInfo = {};
+    productInfo.user = req.user.id;
+    if (title) productInfo.title = title;
+    if (description) productInfo.description = description;
+    if (price) productInfo.price = price;
+    if (images) productInfo.images = images;
+    // create product
+    const product = new Products(productInfo);
+    await product.save();
+    res.status(200).json({
+      success: true,
+      msg: "product added to Database",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, err: "server error" });
+  }
+});
 module.exports = router;

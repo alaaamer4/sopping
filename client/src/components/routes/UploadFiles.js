@@ -1,19 +1,40 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Upload from "../util/Upload";
-const UploadFiles = () => {
+import { connect } from "react-redux";
+import { setAlert } from "../../store/actions/alert";
+const UploadFiles = ({ setAlert }) => {
   const [input, setInput] = useState({
     title: "",
     description: "",
     price: "",
-    area: "",
   });
   const [images, setImages] = useState([]);
-  const { title, description, price, area } = input;
+  const { title, description, price } = input;
 
   const handelSubmit = (e) => {
     e.preventDefault();
-    console.log(input);
-    console.log(images);
+    const config = {
+      headers: { "Content-Type": "Application/Json" },
+    };
+    const productInfo = JSON.stringify({ title, description, price, images });
+    axios
+      .post("/api/products/uploadProduct", productInfo, config)
+      .then((res) => {
+        if (res.data.success) {
+          setAlert("product uploaded successfully", "success");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setAlert("server error", "danger");
+      });
+    setImages([]);
+    setInput({
+      title: "",
+      description: "",
+      price: "",
+    });
   };
   const handelChange = (e) => {
     const { name, value } = e.target;
@@ -23,11 +44,11 @@ const UploadFiles = () => {
     setImages(images);
   };
   return (
-    <section style={{ marginTop: "8rem" }}>
-      <h2 className="large text-primary">
+    <section style={{ marginTop: "3.6rem" }}>
+      <h1>
         {" "}
-        <i className="fas fa-upload"></i> Add product
-      </h2>
+        <i className="fas fa-upload text-primary"></i> Add product
+      </h1>
       <Upload uploadImages={updateImages} />
       <form className="form" onSubmit={handelSubmit}>
         <div className="form-group">
@@ -62,19 +83,7 @@ const UploadFiles = () => {
             autoComplete="off"
           />
         </div>
-        <div className="form-group">
-          <select name="area" onChange={handelChange} value={area}>
-            <option value="0">* Select Your Area</option>
-            <option value="Cairo">Cairo</option>
-            <option value="Alex">Alex</option>
-            <option value="Port-said">Port-said</option>
-            <option value="Ismailia">Ismailia</option>
-            <option value="Aswan">Aswan </option>
-            <option value="Sharqia">Sharqia </option>
-            <option value="Gharbia">Gharbia</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+
         <button className="btn btn-primary">
           <i className="fas fa-plus"></i> Add Item
         </button>
@@ -83,4 +92,7 @@ const UploadFiles = () => {
   );
 };
 
-export default UploadFiles;
+const mapActionsToPros = {
+  setAlert,
+};
+export default connect(null, mapActionsToPros)(UploadFiles);

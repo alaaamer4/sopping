@@ -31,7 +31,7 @@ function App({ auth }) {
           <Switch>
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route exact path="/upload" component={UploadFiles} />
+            <PrivateRoute exact path="/upload" component={UploadFiles} />
           </Switch>
         </div>
       </Router>

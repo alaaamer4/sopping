@@ -20,7 +20,10 @@ const Upload = ({ setAlert, uploadImages }) => {
       .post("/api/products/imageUpload", formData, config)
       .then((res) => {
         if (res.data.success) {
-          setImages([...images, res.data.image]);
+          setImages([
+            ...images,
+            { path: res.data.image, name: res.data.filename },
+          ]);
           uploadImages([...images, res.data.image]);
           setAlert("image uploaded successfully", "success");
           console.log(images);
@@ -33,7 +36,9 @@ const Upload = ({ setAlert, uploadImages }) => {
 
     console.log(images);
   };
-
+  const deleteImage = (path) => {
+    setImages(images.filter((image) => image.path !== path));
+  };
   return (
     <div className="wrapper">
       <div>
@@ -57,10 +62,11 @@ const Upload = ({ setAlert, uploadImages }) => {
         }}
       >
         {images.map((image, index) => (
-          <div key={index}>
+          <div key={index} onClick={() => deleteImage(image.path)}>
             <img
               style={{ minWidth: "300px", width: "300px", height: "240px" }}
-              src={`http://localhost5000/${image}`}
+              src={`http://localhost:5000/${image.name}`}
+              alt={image.name}
             />
           </div>
         ))}
